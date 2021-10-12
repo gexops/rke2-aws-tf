@@ -118,8 +118,16 @@ module "nodepool" {
   vpc_security_group_ids      = concat([var.cluster_data.cluster_sg], var.extra_security_group_ids)
   userdata                    = data.template_cloudinit_config.init.rendered
   iam_instance_profile        = var.iam_instance_profile == "" ? module.iam[0].iam_instance_profile : var.iam_instance_profile
+
   asg                         = var.asg
   spot                        = var.spot
+  extra_instance_types        = var.extra_instance_types
+  capacity_rebalance          = var.capacity_rebalance
+  spot_allocation_strategy    = var.spot_allocation_strategy
+  spot_instance_pools         = var.spot_instance_pools
+  spot_max_price              = var.spot_max_price
+  on_demand_base_capacity     = var.on_demand_base_capacity
+  on_demand_percentage_above_base_capacity = var.on_demand_percentage_above_base_capacity
 
   tags = merge({
     "Role" = "agent",

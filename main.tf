@@ -185,15 +185,25 @@ module "servers" {
   block_device_mappings       = var.block_device_mappings
   extra_block_device_mappings = var.extra_block_device_mappings
   vpc_security_group_ids      = concat([aws_security_group.server.id, aws_security_group.cluster.id], var.extra_security_group_ids)
-  spot                        = var.spot
   load_balancers              = [module.cp_lb.name]
+
+  spot                        = var.spot
+  extra_instance_types        = var.extra_instance_types
+  capacity_rebalance          = var.capacity_rebalance
+  spot_allocation_strategy    = var.spot_allocation_strategy
+  spot_instance_pools         = var.spot_instance_pools
+  spot_max_price              = var.spot_max_price
+  on_demand_base_capacity     = var.on_demand_base_capacity
+  on_demand_percentage_above_base_capacity = var.on_demand_percentage_above_base_capacity
+  
 
   # Overrideable variables
   userdata             = data.template_cloudinit_config.this.rendered
   iam_instance_profile = var.iam_instance_profile == "" ? module.iam[0].iam_instance_profile : var.iam_instance_profile
 
   # Don't allow something not recommended within etcd scaling, set max deliberately and only control desired
-  asg = { min : 1, max : 7, desired : var.servers }
+  asg = { min : var.asg.min, max : var.asg.max, desired : var.servers }
+  
 
   # TODO: Ideally set this to `length(var.servers)`, but currently blocked by: https://github.com/rancher/rke2/issues/349
   min_elb_capacity = 1

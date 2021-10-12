@@ -102,6 +102,19 @@ variable "spot_max_price" {
 }
 
 
+variable "on_demand_base_capacity" {
+  default = 0
+  type    = number
+  description = "Absolute minimum amount of desired capacity that must be fulfilled by on-demand instances Default: 0"
+}
+
+variable "on_demand_percentage_above_base_capacity" {
+  default = 0
+  type    = number
+  description = "Percentage split between on-demand and Spot instances above the base on-demand capacity. 100 = no spot. Default: 100"
+}
+
+
 variable "min_elb_capacity" {
   type    = number
   default = null
@@ -112,7 +125,15 @@ variable "capacity_rebalance" {
   type    = bool
 }
 
+//variable "extra_instance_types" {
+//  type = list(map(string))
+//  default = []
+//}
+
 variable "extra_instance_types" {
-  type = list(map(string))
+  type = list(object({
+    instance_type = string
+    weighted_capacity = number
+  }))
   default = []
 }
