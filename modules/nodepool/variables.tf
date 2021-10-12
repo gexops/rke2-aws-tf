@@ -82,7 +82,37 @@ variable "spot" {
   type    = bool
 }
 
+variable "spot_allocation_strategy" {
+  default = "lowest-price"
+  type    = string
+  description = "Valid Values: lowest-price, capacity-optimized, capacity-optimized-prioritized. Default: lowest-price"
+}
+
+variable "spot_instance_pools" {
+  default = 2
+  type    = number
+  description = "Number of Spot pools per availability zone to allocate capacity. Default: 2"
+}
+
+
+variable "spot_max_price" {
+  default = ""
+  type    = string
+  description = "Maximum price per unit hour that the user is willing to pay for the Spot instances. Default: an empty string which means the on-demand price."
+}
+
+
 variable "min_elb_capacity" {
   type    = number
   default = null
+}
+
+variable "capacity_rebalance" {
+  default = false
+  type    = bool
+}
+
+variable "extra_instance_types" {
+  type = list(map(string))
+  default = []
 }

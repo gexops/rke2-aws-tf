@@ -62,6 +62,9 @@ resource "aws_autoscaling_group" "this" {
   max_size         = var.asg.max
   desired_capacity = var.asg.desired
 
+  capacity_rebalance     = var.capacity_rebalance
+  suspended_processes    = var.capacity_rebalance ? ["AZRebalance"] : []
+
   # Health check and target groups dependent on whether we're a server or not (identified via rke2_url)
   health_check_type = var.health_check_type
   target_group_arns = var.target_group_arns
@@ -85,6 +88,10 @@ resource "aws_autoscaling_group" "this" {
       instances_distribution {
         on_demand_base_capacity                  = 0
         on_demand_percentage_above_base_capacity = 0
+        spot_allocation_strategy                 = var.spot_allocation_strategy
+        spot_instance_pools                      = var.spot_instance_pools
+        spot_max_price                           = var.spot_max_price
+
       }
 
       launch_template {
@@ -92,6 +99,14 @@ resource "aws_autoscaling_group" "this" {
           launch_template_id   = aws_launch_template.this.id
           launch_template_name = aws_launch_template.this.name
           version              = "$Latest"
+        }
+      }
+
+      dynamic "override" {
+        for_each = var.instance_types
+        content {
+          instance_type     = lookup(override.value, "instance_type", null)
+          weighted_capacity = lookup(override.value, "weighted_capacity", null)
         }
       }
     }
