@@ -100,13 +100,12 @@ resource "aws_autoscaling_group" "this" {
           launch_template_name = aws_launch_template.this.name
           version              = "$Latest"
         }
-      }
-
-      dynamic "override" {
-        for_each = var.extra_instance_types
-        content {
-          instance_type     = lookup(override.value, "instance_type", null)
-          weighted_capacity = lookup(override.value, "weighted_capacity", null)
+        dynamic "override" {
+          for_each = var.extra_instance_types
+          content {
+            instance_type     = lookup(override.value, "instance_type", null)
+            weighted_capacity = lookup(override.value, "weighted_capacity", null)
+          }
         }
       }
     }
