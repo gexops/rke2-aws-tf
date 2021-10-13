@@ -52,3 +52,12 @@ output "iam_role_arn" {
 output "kubeconfig_path" {
   value = "s3://${module.statestore.bucket}/rke2.yaml"
 }
+
+
+output "s3_bucket" {
+  value = module.statestore.bucket
+}
+
+output "s3_force_delete_enabled" {
+  value = var.s3_force_delete_enabled
+}

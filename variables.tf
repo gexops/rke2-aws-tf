@@ -206,3 +206,17 @@ variable "enable_ccm" {
   type        = bool
   default     = false
 }
+
+// Additional Add-On Features
+
+variable "s3_bucket_name" {
+  type = string
+  description = "S3 Bucket Name to use / create for RKE2 Config Storage"
+  default = null
+}
+
+variable "s3_force_delete_enabled" {
+  type = bool
+  description = "Enable / Disable S3 Force Delete. Disable if you intend on using the bucket for other storage. Default = True"
+  default = true
+}

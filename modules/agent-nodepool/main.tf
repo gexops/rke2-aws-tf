@@ -13,6 +13,10 @@ locals {
     "k8s.io/cluster-autoscaler/enabled"                  = var.enable_autoscaler,
     "k8s.io/cluster-autoscaler/${var.cluster_data.name}" = var.enable_autoscaler,
   }
+  autoscaler_spot_tags = {
+    "k8s.io/cluster-autoscaler/node-template/label/aws.amazon.com/spot"  = "true"
+    "k8s.io/cluster-autoscaler/node-template/taint/spotInstance" = "true:PreferNoSchedule"
+  }
 }
 
 #
@@ -131,5 +135,5 @@ module "nodepool" {
 
   tags = merge({
     "Role" = "agent",
-  }, local.default_tags, local.ccm_tags, local.autoscaler_tags, var.tags)
+  }, local.default_tags, local.ccm_tags, (var.spot ? merge(local.autoscaler_tags, local.autoscaler_spot_tags) : local.autoscaler_tags), var.tags)
 }

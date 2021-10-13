@@ -36,10 +36,12 @@ resource "random_password" "token" {
 }
 
 module "statestore" {
-  source = "./modules/statestore"
-  name   = local.uname
-  token  = random_password.token.result
-  tags   = merge(local.default_tags, var.tags)
+  source                  = "./modules/statestore"
+  name                    = local.uname
+  token                   = random_password.token.result
+  tags                    = merge(local.default_tags, var.tags)
+  s3_bucket_name          = var.s3_bucket_name
+  s3_force_delete_enabled = var.s3_force_delete_enabled
 }
 
 #

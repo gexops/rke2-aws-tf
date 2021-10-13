@@ -1,7 +1,7 @@
 resource "aws_s3_bucket" "bucket" {
-  bucket        = lower("${var.name}-rke2")
+  bucket        = var.s3_bucket_name != null ? var.s3_bucket_name : lower("${var.name}-rke2")
   acl           = "private"
-  force_destroy = true
+  force_destroy = var.s3_force_delete_enabled
 
   server_side_encryption_configuration {
     rule {
