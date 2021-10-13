@@ -103,7 +103,7 @@ resource "aws_autoscaling_group" "this" {
       }
 
       dynamic "override" {
-        for_each = var.instance_types
+        for_each = var.extra_instance_types
         content {
           instance_type     = lookup(override.value, "instance_type", null)
           weighted_capacity = lookup(override.value, "weighted_capacity", null)
